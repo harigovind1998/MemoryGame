@@ -17,8 +17,20 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     
     let gridForTwo = [4,5]
     let gridForThree = [6,5]
-    let grodForFour = [5,8]
-    
+    let gridForFour = [5,8]
+    var selectedSizes: [Int] = []
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        gridPicker.delegate = self
+        gridPicker.dataSource = self
+        stepper.wraps = true
+        stepper.autorepeat = true
+        selectedSizes = gridForTwo
+        stepper.minimumValue = Double(gridMin);
+        stepper.maximumValue = Double(gridMax);
+    }
+
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -33,24 +45,21 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         return String(possibleMatches[row])
     }
     func setMaxAndMin(matches: Int){
-        
-        
+        switch matches{
+        case 2:
+            selectedSizes = gridForTwo
+        case 3:
+            selectedSizes = gridForThree
+        case 4:
+            selectedSizes = gridForFour
+        default:
+            selectedSizes = gridForTwo
+        }
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        
-        gridPicker.delegate = self
-        gridPicker.dataSource = self
-        stepper.wraps = true
-        stepper.autorepeat = true
-        stepper.minimumValue = Double(gridMin);
-        stepper.maximumValue = Double(gridMax);
-    }
-    
     @IBAction func gridSizeStepper(_ sender: UIStepper) {
-        xGridValue.text = String(gridForTwo[Int(sender.value)])
+        xGridValue.text = String(selectedSizes[Int(sender.value)])
+        yGridValue.text = String(selectedSizes[(Int(sender.value)+1)%2])
     }
     
     @IBOutlet weak var gridPicker: UIPickerView!
